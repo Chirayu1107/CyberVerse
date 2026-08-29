@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05fcf53b351696d48b3540ddd72e8b02, type: 3}
+  m_Name: Arya_AfterPC
+  m_EditorClassIdentifier: 
+  npcName: Arya
+  dialogueLines:
+  - speakerName: ___
+    text: Woo-woo-woo!!
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: 0
+  - speakerName: Arya
+    text: Whoa... what was that?
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: 0
+  - speakerName: Arya
+    text: That sounded like it came from the living room.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: 0
+  - speakerName: Arya
+    text: Maybe I should go check it out.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 1
+    useAutomaticJump: 0
+    automaticJumpLineIndex: 0

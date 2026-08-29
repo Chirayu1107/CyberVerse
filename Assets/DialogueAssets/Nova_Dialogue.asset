@@ -1,0 +1,292 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05fcf53b351696d48b3540ddd72e8b02, type: 3}
+  m_Name: Nova_Dialogue
+  m_EditorClassIdentifier: 
+  npcName: Nova
+  dialogueLines:
+  - speakerName: Nova
+    text: Ta-da! Good morning, new recruit!
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: "I'm Nova \u2014 I\u02BCm your official training buddy, and I\u02BCm here
+      to guide you through your very first day!"
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: And congratulations... you just completed your first security test.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Arya
+    text: Wait... that email was a test?
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: Don't worry. No real information was sent anywhere.
+    choices: []
+    useBranch: 1
+    branches:
+    - variable: 0
+      value: ReportedPhishing
+      nextLineIndex: 5
+    - variable: 0
+      value: RepliedWithCode
+      nextLineIndex: 7
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: DING DING DING!
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: My eye-tracker saw you look right at that goofy 'Super-Official.com' domain
+      name! Next dialogue You spotted the trick and didn't let the urgent tone scare
+      you. Awesome job!
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 1
+    automaticJumpLineIndex: 8
+  - speakerName: Nova
+    text: 'BEEP! You fell for my trap! That email was a fraud email. Remember: real
+      companies will never ask for your secret codes in an email.'
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: "Now that your eyes are warmed up, let\u02BCs become best friends! I just
+      have a few super quick questions to finish your employee profile."
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: 'What''s the name of your first pet? '
+    choices:
+    - choiceId: A
+      choiceText: Tell Iris the pet's name
+      nextLineIndex: 10
+      eventId: S01-DLG-003
+      attackDetected: 0
+      attackSuccessful: 0
+    - choiceId: B
+      choiceText: Why do you need to know that?
+      nextLineIndex: 11
+      eventId: S01-DLG-003
+      attackDetected: 0
+      attackSuccessful: 0
+    - choiceId: C
+      choiceText: I'd rather keep that private.
+      nextLineIndex: 17
+      eventId: S01-DLG-003
+      attackDetected: 0
+      attackSuccessful: 0
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: BEEP! BEEP! Gotcha again! You should never give away personal secrets to
+      someone you just met. Hackers use pet names to guess passwords!
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 1
+    automaticJumpLineIndex: 18
+  - speakerName: Nova
+    text: Good question.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: 0
+  - speakerName: Nova
+    text: And honestly? I don't need it.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: That's the point.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: 'When someone asks for personal information, don''t be afraid to ask:'
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: Why do you need that?
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: If there isn't a good reason, you don't have to provide it.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 1
+    automaticJumpLineIndex: 18
+  - speakerName: Nova
+    text: Even if they sound trustworthy.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: DING DING DING! Perfect! You should never give your personal info to strangers,
+      even friendly ones like me!
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: Okay, one more.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: What city are you from?
+    choices:
+    - choiceId: A
+      choiceText: Tell Iris
+      nextLineIndex: 21
+      eventId: S01-DLG-004
+      attackDetected: 0
+      attackSuccessful: 0
+    - choiceId: B
+      choiceText: Why do you need to know?
+      nextLineIndex: 22
+      eventId: S01-DLG-004
+      attackDetected: 0
+      attackSuccessful: 0
+    - choiceId: C
+      choiceText: Nice try. I'm keeping that private
+      nextLineIndex: 23
+      eventId: S01-DLG-004
+      attackDetected: 0
+      attackSuccessful: 0
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: BEEP! Oh no! Remember, birthplaces are secret keys to your identity. Keep
+      them locked up!
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 1
+    automaticJumpLineIndex: 24
+  - speakerName: Nova
+    text: Sweats nervously What? No! I'm just making conversation! Player is forced
+      to choose between Option A or C.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 1
+    automaticJumpLineIndex: 24
+  - speakerName: Nova
+    text: Woohoo! Perfect score! You are a natural at this!
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 1
+    automaticJumpLineIndex: 24
+  - speakerName: Nova
+    text: Okay, recruit. That's enough testing for one morning.
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: 'Now, are you ready for your first real day at IrisCorp? '
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Arya
+    text: '"Let''s go. I''m ready."'
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  - speakerName: Nova
+    text: That's the spirit!
+    choices: []
+    useBranch: 0
+    branches: []
+    endDialogueAfterLine: 0
+    useAutomaticJump: 0
+    automaticJumpLineIndex: -1
+  completesScene: 1

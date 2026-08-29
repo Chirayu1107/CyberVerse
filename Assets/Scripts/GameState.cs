@@ -4,10 +4,15 @@ public class GameState : MonoBehaviour
 {
     public static GameState Instance;
 
-    [Header("Security")]
-    public int securityScore = 100;
-    public int mistakes = 0;
-    public int correctDecisions = 0;
+    [Header("Email Decision")]
+    public EmailDecision emailDecision = EmailDecision.None;
+
+    public enum EmailDecision
+    {
+        None,
+        ReportedPhishing,
+        RepliedWithCode
+    }
 
     [Header("Scenario")]
     public bool attackDetected = false;
@@ -26,20 +31,11 @@ public class GameState : MonoBehaviour
         }
     }
 
-    public void AddSecurityScore(int amount)
+    public void SetEmailDecision(EmailDecision decision)
     {
-        securityScore += amount;
-        securityScore = Mathf.Clamp(securityScore, 0, 100);
-    }
+        emailDecision = decision;
 
-    public void RecordMistake()
-    {
-        mistakes++;
-    }
-
-    public void RecordCorrectDecision()
-    {
-        correctDecisions++;
+        Debug.Log("Email Decision: " + emailDecision);
     }
 
     public void SetAttackDetected(bool value)

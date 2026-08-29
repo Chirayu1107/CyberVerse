@@ -27,9 +27,11 @@ public class DialogueManager : MonoBehaviour
 
     private DialogueData currentDialogue;
     private int currentLine;
+    private NPCInteraction currentNPC;
 
     private Coroutine typingCoroutine;
     private bool isTyping;
+
 
     private void Awake()
     {
@@ -41,20 +43,29 @@ public class DialogueManager : MonoBehaviour
         IsDialogueActive = false;
     }
 
-    public void StartDialogue(DialogueData dialogue)
+
+    public void StartDialogue(
+    DialogueData dialogue,
+    NPCInteraction npc)
+{
+    if (dialogue == null)
     {
-        currentDialogue = dialogue;
-        currentLine = 0;
-
-        dialoguePanel.SetActive(true);
-        IsDialogueActive = true;
-
-        playerMovement.enabled = false;
-
-        npcNameText.text = dialogue.npcName;
-
-        ShowCurrentLine();
+        Debug.LogWarning("DialogueData is null.");
+        return;
     }
+
+    currentDialogue = dialogue;
+    currentNPC = npc;
+    currentLine = 0;
+
+    dialoguePanel.SetActive(true);
+    IsDialogueActive = true;
+
+    playerMovement.enabled = false;
+
+    ShowCurrentLine();
+}
+
 
     private void Update()
     {
@@ -74,9 +85,37 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+
     private void ShowCurrentLine()
     {
-        DialogueLine line = currentDialogue.dialogueLines[currentLine];
+        if (currentDialogue == null)
+            return;
+
+        if (currentLine < 0 ||
+            currentLine >= currentDialogue.dialogueLines.Length)
+        {
+            EndDialogue();
+            return;
+        }
+
+        DialogueLine line =
+            currentDialogue.dialogueLines[currentLine];
+
+        // -----------------------------
+        // Automatic Branch
+        // -----------------------------
+
+        if (line.useBranch)
+        {
+            HandleAutomaticBranch(line);
+            return;
+        }
+
+        // -----------------------------
+        // Normal Dialogue
+        // -----------------------------
+
+        npcNameText.text = line.speakerName;
 
         choicePanel.SetActive(false);
         continueText.gameObject.SetActive(true);
@@ -86,8 +125,10 @@ public class DialogueManager : MonoBehaviour
             StopCoroutine(typingCoroutine);
         }
 
-        typingCoroutine = StartCoroutine(TypeLine(line.text));
+        typingCoroutine =
+            StartCoroutine(TypeLine(line.text));
     }
+
 
     private IEnumerator TypeLine(string line)
     {
@@ -97,6 +138,7 @@ public class DialogueManager : MonoBehaviour
         foreach (char letter in line)
         {
             dialogueText.text += letter;
+
             yield return new WaitForSeconds(textSpeed);
         }
 
@@ -105,6 +147,7 @@ public class DialogueManager : MonoBehaviour
 
         ShowChoicesIfAvailable();
     }
+
 
     private void FinishTyping()
     {
@@ -122,13 +165,16 @@ public class DialogueManager : MonoBehaviour
         ShowChoicesIfAvailable();
     }
 
+
     private bool HasChoices()
     {
         DialogueChoice[] choices =
             currentDialogue.dialogueLines[currentLine].choices;
 
-        return choices != null && choices.Length > 0;
+        return choices != null &&
+               choices.Length > 0;
     }
+
 
     private void ShowChoicesIfAvailable()
     {
@@ -152,9 +198,11 @@ public class DialogueManager : MonoBehaviour
                 choiceButtons[i].gameObject.SetActive(true);
 
                 TMP_Text buttonText =
-                    choiceButtons[i].GetComponentInChildren<TMP_Text>();
+                    choiceButtons[i]
+                    .GetComponentInChildren<TMP_Text>();
 
-                buttonText.text = choices[i].choiceText;
+                buttonText.text =
+                    choices[i].choiceText;
 
                 int choiceIndex = i;
 
@@ -171,65 +219,174 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+
     private void SelectChoice(int choiceIndex)
-{
-    DialogueChoice choice =
-        currentDialogue.dialogueLines[currentLine].choices[choiceIndex];
-
-    ApplyChoiceConsequences(choice);
-
-    choicePanel.SetActive(false);
-
-    if (choice.nextLineIndex < 0)
     {
-        EndDialogue();
-        return;
+        DialogueChoice choice =
+            currentDialogue
+            .dialogueLines[currentLine]
+            .choices[choiceIndex];
+
+        ApplyChoiceConsequences(choice);
+
+        choicePanel.SetActive(false);
+
+        if (choice.nextLineIndex < 0)
+        {
+            EndDialogue();
+            return;
+        }
+
+        currentLine = choice.nextLineIndex;
+
+        ShowCurrentLine();
     }
 
-    currentLine = choice.nextLineIndex;
 
-    ShowCurrentLine();
-}
+    private void ApplyChoiceConsequences(DialogueChoice choice)
+    {
+        Debug.Log(
+        $"[CHOICE SELECTED] EventID='{choice.eventId}' ChoiceID='{choice.choiceId}' Text='{choice.choiceText}'"
+    );
 
-private void ApplyChoiceConsequences(DialogueChoice choice)
-{
     if (GameState.Instance == null)
     {
         Debug.LogWarning("GameState not found in scene.");
         return;
     }
+        if (GameState.Instance == null)
+        {
+            Debug.LogWarning("GameState not found in scene.");
+            return;
+        }
 
-    if (choice.securityScoreChange != 0)
+        if (choice.attackDetected)
+        {
+            GameState.Instance.SetAttackDetected(true);
+        }
+
+        if (choice.attackSuccessful)
+        {
+            GameState.Instance.SetAttackSuccessful(true);
+        }
+
+        // Backend event
+        // Track dialogue decision
+    if (!string.IsNullOrEmpty(choice.eventId))
+        {
+        if (EventTracker.Instance != null)
+            {
+                EventTracker.Instance.TrackDialogueChoice(
+                choice.eventId,
+                choice.choiceId
+                );
+            }
+            else
+            {   
+                Debug.LogWarning(
+                "EventTracker not found."
+                );
+            }
+        }
+    }
+
+
+    // =====================================================
+    // GENERIC AUTOMATIC BRANCH SYSTEM
+    // =====================================================
+
+    private void HandleAutomaticBranch(DialogueLine line)
     {
-        GameState.Instance.AddSecurityScore(
-            choice.securityScoreChange
+        if (GameState.Instance == null)
+        {
+            Debug.LogWarning("GameState not found.");
+
+            MoveToNextLine();
+            return;
+        }
+
+        if (line.branches == null ||
+            line.branches.Length == 0)
+        {
+            Debug.LogWarning(
+                "Branch line has no branches configured."
+            );
+
+            MoveToNextLine();
+            return;
+        }
+
+        foreach (DialogueBranch branch in line.branches)
+        {
+            string currentValue =
+                GetGameStateValue(branch.variable);
+
+            if (currentValue == branch.value)
+            {
+                Debug.Log(
+                    $"Branch matched: {branch.variable} = {branch.value}"
+                );
+
+                currentLine = branch.nextLineIndex;
+
+                ShowCurrentLine();
+
+                return;
+            }
+        }
+
+        Debug.LogWarning(
+            "No matching dialogue branch found."
         );
+
+        MoveToNextLine();
     }
 
-    if (choice.countsAsMistake)
+
+    private string GetGameStateValue(BranchVariable variable)
     {
-        GameState.Instance.RecordMistake();
+        switch (variable)
+        {
+            case BranchVariable.EmailDecision:
+
+                return GameState.Instance
+                    .emailDecision
+                    .ToString();
+
+
+            case BranchVariable.PetDecision:
+
+                // We'll add this when Pet Decision is implemented.
+                return "";
+
+
+            case BranchVariable.CityDecision:
+
+                // We'll add this when City Decision is implemented.
+                return "";
+
+
+            default:
+
+                return "";
+        }
     }
 
-    if (choice.countsAsCorrect)
+
+    private void MoveToNextLine()
     {
-        GameState.Instance.RecordCorrectDecision();
+        currentLine++;
+
+        if (currentLine >=
+            currentDialogue.dialogueLines.Length)
+        {
+            EndDialogue();
+            return;
+        }
+
+        ShowCurrentLine();
     }
 
-    if (choice.attackDetected)
-    {
-        GameState.Instance.SetAttackDetected(true);
-    }
-
-    if (choice.attackSuccessful)
-    {
-        GameState.Instance.SetAttackSuccessful(true);
-    }
-
-    Debug.Log(
-        $"Security Score: {GameState.Instance.securityScore}"
-    );
-}
 
     private void NextLine()
 {
@@ -242,33 +399,58 @@ private void ApplyChoiceConsequences(DialogueChoice choice)
         return;
     }
 
-    currentLine++;
-
-    if (currentLine >= currentDialogue.dialogueLines.Length)
+    // Automatic jump
+    if (currentLineData.useAutomaticJump &&
+        currentLineData.automaticJumpLineIndex >= 0)
     {
-        EndDialogue();
+        currentLine = currentLineData.automaticJumpLineIndex;
+        ShowCurrentLine();
         return;
     }
 
-    ShowCurrentLine();
+    MoveToNextLine();
 }
 
+
     public void EndDialogue()
+  {
+    if (typingCoroutine != null)
     {
-        if (typingCoroutine != null)
-        {
-            StopCoroutine(typingCoroutine);
-            typingCoroutine = null;
-        }
-
-        dialoguePanel.SetActive(false);
-        choicePanel.SetActive(false);
-
-        IsDialogueActive = false;
-        isTyping = false;
-
-        playerMovement.enabled = true;
-
-        FindFirstObjectByType<PlayerInteraction>()?.ClearInteraction();
+        StopCoroutine(typingCoroutine);
+        typingCoroutine = null;
     }
+
+    // Check whether THIS dialogue completes the scene
+    if (currentDialogue != null &&
+        currentDialogue.completesScene)
+    {
+        if (Scene1ScenarioManager.Instance != null)
+        {
+            Scene1ScenarioManager.Instance.CompleteScenario();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Scene1ScenarioManager not found."
+            );
+         }
+     }
+
+      dialoguePanel.SetActive(false);
+      choicePanel.SetActive(false);
+
+      IsDialogueActive = false;
+      isTyping = false;
+
+      playerMovement.enabled = true;
+
+      FindFirstObjectByType<PlayerInteraction>()
+        ?.ClearInteraction();
+
+      if (currentNPC != null)
+      {
+          currentNPC.OnDialogueFinished();
+          currentNPC = null;
+      }
+   }
 }

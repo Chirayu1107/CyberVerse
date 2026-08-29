@@ -3153,6 +3153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   computerUI: {fileID: 1455835051}
   playerMovement: {fileID: 1532143873}
+  playerInteraction: {fileID: 0}
 --- !u!1 &1423476777
 GameObject:
   m_ObjectHideFlags: 0
